@@ -3,8 +3,8 @@ require('dotenv').config();
 
 
 const sequelize=new Sequelize("TaskApplication","root",process.env.dbPassword,{
-host:"localhost",
-dialect:"mysql"
+host:process.env.host,
+dialect:process.env.dialect
 });
 
 try {

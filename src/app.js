@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-const port=process.env.port || 3000
-const taskRoutes = require('./src/routes/task.routes');
-const tagRoutes = require('./src/routes/tag.routes');
+const taskRoutes = require('./routes/task.routes');
+const tagRoutes = require('./routes/tag.routes');
 
 app.use(express.json());
 

@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "mittal2927@2006",
+    "password": "DataBase2717",
     "database": "taskapplication",
     "host": "127.0.0.1",
     "dialect": "mysql"

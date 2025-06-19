@@ -35,7 +35,7 @@ app.post("/register", async (req, res) => {
 
   const accessToken = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
-  console.log("New User created successfully");
+  res.json({message : "New User created successfully"});
 });
 
 app.post("/login",async (req, res) => {

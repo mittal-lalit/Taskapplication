@@ -26,13 +26,14 @@ app.post("/register", async (req, res) => {
     if (!first_name || !last_name) 
     return res.status(400).json({ message: "first name and last name does not exist" });
 
-  const existingUser = await User.findOne({ where: { email } });
+  const existingUser = await User.findOne({ where: { email:"mittal@gamil.com" } });
+  console.log("existingUser",existingUser)
   if (existingUser) 
     return res.status(400).json({ message: "User already exists" });
-
   const hashedPassword = await bcrypt.hash(password, 10);
+  console.log("hashed",hashedPassword)
   const newUser = await User.create({ first_name, last_name, email, password: hashedPassword });
-
+  console.log("new user",newUser)
   const accessToken = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
   res.json({message : "New User created successfully"});

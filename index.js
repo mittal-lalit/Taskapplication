@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const db = require("./models"); 
+const taskRoutes = require('./src/routes/task.routes');
+const tagRoutes = require('./src/routes/tag.routes');
 const User = db.User;
 const port=process.env.PORT || 3000;
 const app=express();
@@ -51,7 +53,11 @@ app.post("/login",async (req, res) => {
 });
 
 
+app.use('/api/tasks', taskRoutes);
+app.use('/api/tags', tagRoutes);
 
 app.listen(port,()=>{
 console.log(`Server is running on port ${port}`);
 })
+
+module.exports = app;

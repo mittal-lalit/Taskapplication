@@ -1,5 +1,6 @@
 const { Task } = require('../../models');
 
+
 exports.getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.findAll();
@@ -8,6 +9,7 @@ exports.getAllTasks = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong' });
   }
 };
+
 
 exports.createTask = async (req, res) => {
   try {

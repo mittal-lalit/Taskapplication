@@ -1,5 +1,6 @@
 "use strict";
 
+const { DataTypes } = require('sequelize');
 const user = require('../models/user');
 
 /** @type {import('sequelize-cli').Migration} */
@@ -17,6 +18,15 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT,
+      },
+      priority:{
+        type:DataTypes.STRING
+      },
+      status:{
+        type:DataTypes.STRING
+      },
+      dueDate:{
+        type:DataTypes.DATEONLY
       },
       userId: {
         type: Sequelize.INTEGER,

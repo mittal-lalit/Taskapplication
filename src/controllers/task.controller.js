@@ -15,7 +15,8 @@ exports.getAllTasks = async (req, res) => {
 exports.createTask = async (req, res) => {
   try {
     const{title ,description , priority , status , dueDate} = req.body;
-
+    if(!title || !description || !priority || !status || !dueDate)
+      return res.status(400).json({message :"title ,description , priority , status , dueDate are required"})
     const task = await Task.create({
       title,
       description,

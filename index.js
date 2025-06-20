@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const db = require("./models"); 
 const taskRoutes = require('./src/routes/task.routes');
 const tagRoutes = require('./src/routes/tag.routes');
+const authMiddleware = require('./src/middlewares/auth.middleware');
 const User = db.User;
 const port=process.env.PORT || 3000;
 const app=express();
@@ -53,8 +54,8 @@ app.post("/login",async (req, res) => {
   res.json({ accessToken });
 });
 
-
-app.use('/api/tasks', taskRoutes);
+app.use(authMiddleware)
+app.use('/api/tasks',  taskRoutes);
 app.use('/api/tags', tagRoutes);
 
 app.listen(port,()=>{

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const auth = require("../middlewares/auth.middleware");
 const taskController = require('../controllers/task.controller');
 
 // Basic Routes
@@ -15,3 +14,4 @@ router.get('/:id/logs', taskController.getTaskLogs);
 module.exports = router;
 
 
+    

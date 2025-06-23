@@ -22,6 +22,44 @@ exports.getTaskById = async (req, res) => {
   }
 };
 
+exports.getAllTasks = async (req, res) => {
+  try {
+    const {
+      status,
+      priority,
+      sortBy,
+      id,
+      order: sortOrder,
+      limit,
+      offset,
+    } = req.query;
+
+    const whereClause = {
+      userId: req.user.id,
+    };
+
+    // Filters
+    if (status) whereClause.status = status;
+    if (priority) whereClause.priority = priority;
+    if (id) whereClause.id = id; // for optional filter by task id
+
+    const sort = sortBy ? [[sortBy, sortOrder === "desc" ? "DESC" : "ASC"]] : [];
+
+    const pageLimit = parseInt(limit) || 10;
+    const pageOffset = parseInt(offset) || 0;
+
+    const tasks = await Task.findAll({
+      where: whereClause,
+      order: sort,
+      limit: pageLimit,
+      offset: pageOffset,
+    });
+
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+};
 
 exports.getAllTasksByTags = async (req, res) => {
   try {

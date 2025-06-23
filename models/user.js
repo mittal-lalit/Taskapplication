@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     last_name: {type:DataTypes.STRING},
     email: {type:DataTypes.STRING},
     password: {type:DataTypes.STRING},
+    role:{type:DataTypes.STRING,allowNull:true,defaultValue:"user"}
   }, {
     sequelize,
     modelName: 'User',

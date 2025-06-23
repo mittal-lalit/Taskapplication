@@ -7,8 +7,8 @@ const User = db.User;
 dotenv.config();
 
 const register = (async (req, res) => {
-    const { first_name, last_name, email, password } = req.body;
-    console.log("req.body", req.body)
+    try{
+    const { first_name, last_name, email, password,role } = req.body;
     if (!email || !password)
         return res.status(400).json({ message: "Email & Password required" });
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,16 +22,18 @@ const register = (async (req, res) => {
     console.log("existingUser", existingUser)
     if (existingUser)
         return res.status(400).json({ message: "User already exists" });
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("hashed", hashedPassword)
-    const newUser = await User.create({ first_name, last_name, email, password: hashedPassword });
-    console.log("new user", newUser)
+    const hashedPassword = await bcrypt.hash(password,10);
+    const newUser = await User.create({ first_name, last_name, email, password: hashedPassword,role });
     const accessToken = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
     res.json({ message: "New User created successfully" });
+}catch(error){
+    res.status(500).json({message :"Registration Failed"});
+}
 });
 
 const login = (async (req, res) => {
+    try{
     const { email, password } = req.body;
     if (!email || !password)
         return res.status(400).json({ message: "Email & Password required" });
@@ -43,6 +45,9 @@ const login = (async (req, res) => {
         return res.status(403).json({ message: "Invalid password" });
     const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
     res.json({ accessToken });
+}catch(error){
+    res.status(500).json({message:"Login Failed"});
+}
 });
 
 module.exports = { register, login };

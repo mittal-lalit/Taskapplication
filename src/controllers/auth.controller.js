@@ -19,7 +19,8 @@ const register = (async (req, res) => {
         return res.status(400).json({ message: "first name and last name does not exist" });
 
     const existingUser = await User.findOne({ where: { email } });
-    console.log("existingUser", existingUser)
+   
+    
     if (existingUser)
         return res.status(400).json({ message: "User already exists" });
     const hashedPassword = await bcrypt.hash(password, 10);

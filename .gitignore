@@ -8,7 +8,7 @@ node_modules/
 package-lock.json
 
 #Ignore .nyc_output file
-.nyc_output
+.nyc_output/
 
 #Ignore coverage file
-coverage
+coverage/

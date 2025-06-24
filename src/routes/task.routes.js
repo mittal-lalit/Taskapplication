@@ -3,7 +3,6 @@ const router = express.Router();
 const taskController = require('../controllers/task.controller');
 
 // Basic Routes
-router.get('/', taskController.getAllTasksByTags);
 router.get('/', taskController.getAllTasks);
 router.get('/:id', taskController.getTaskById);
 router.post('/', taskController.createTask);

@@ -20,7 +20,9 @@ exports.getTaskById = async (req, res) => {
 return res.status(404).json({ message: "Task not found" });
 
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 };
 
@@ -35,7 +37,7 @@ exports.getAllTasks = async (req, res) => {
       order: sortOrder,
       limit,
       offset,
-      tags,
+      tags
     } = req.query;
     const whereClause = {
       userId: req.user.id,
@@ -68,6 +70,7 @@ exports.getAllTasks = async (req, res) => {
         : [];
     const tasks = await Task.findAll({
       where: whereClause,
+      include: includeClause,
       include: includeClause,
       order: sort,
       limit: pageLimit,
@@ -183,21 +186,18 @@ exports.getTaskLogs = async (req, res) => {
     const logs = await AuditLog.findAll({
       where: {
         taskId,
-        userId: req.user.id
+        userId: req.user.id,
       },
-      order: [['createdAt', 'DESC']]
+      order: [["createdAt", "DESC"]],
     });
 
     res.status(200).json({ logs });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch logs', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch logs", error: error.message });
   }
 };
-
-
-
-
-
 
 //Assign tag to a task
 exports.assignTag = async (req, res) => {
@@ -205,7 +205,7 @@ exports.assignTag = async (req, res) => {
   try {
     const task = await Task.findByPk(taskId);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({ message: "Task not found" });
     }
     const tag = await Tag.findAll({ where: { name: req.body.name } });
     if (!tag || tag.length === 0) {
@@ -215,15 +215,17 @@ exports.assignTag = async (req, res) => {
 
     await TaskTag.create({
       taskId: task.id,
-      tagId: tag[0].id
+      tagId: tag[0].id,
     });
 
     res.status(201).json({
       message: 'Tag linked successfully',
     });
   } catch (error) {
-    console.error('Tag assignment failed:', error.message);
-    res.status(500).json({ message: 'Something went wrong while assigning the tag' });
+    console.error("Tag assignment failed:", error.message);
+    res
+      .status(500)
+      .json({ message: "Something went wrong while assigning the tag" });
   }
 };
 
@@ -242,12 +244,12 @@ exports.deleteTag = async (req, res) => {
     await TaskTag.destroy({
       where: {
         taskId: id,
-        tagId: tagId
-      }
+        tagId: tagId,
+      },
     });
     res.status(200).json({ message: 'Tag removed from task successfully' });
   } catch (error) {
-    console.error('Error removing tag from task:', error.message);
-    res.status(500).json({ message: 'Failed to remove tag from task' });
+    console.error("Error removing tag from task:", error.message);
+    res.status(500).json({ message: "Failed to remove tag from task" });
   }
 };

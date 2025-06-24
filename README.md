@@ -94,6 +94,8 @@ TaskTag (many-to-many relation)
 
 #  tests/tag.test.js
 
+# tests/index.test.js
+
 
 
 

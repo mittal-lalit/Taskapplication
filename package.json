@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "mocha tests --timeout 10000",
+    "coverage": "nyc npm test"
   },
   "repository": {
     "type": "git",
@@ -24,9 +26,15 @@
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10",
+    "nyc": "^14.1.0",
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.3"
+    "chai": "^5.2.0",
+    "mocha": "^11.7.0",
+    "nyc": "^17.1.0",
+    "sequelize-cli": "^6.6.3",
+    "sinon": "^21.0.0",
+    "supertest": "^7.1.1"
   }
 }

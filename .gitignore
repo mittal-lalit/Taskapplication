@@ -6,3 +6,9 @@ node_modules/
 
 # Ignore package-lock.json (optional)
 package-lock.json
+
+#Ignore .nyc_output file
+.nyc_output
+
+#Ignore coverage file
+coverage

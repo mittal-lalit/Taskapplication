@@ -315,7 +315,10 @@
 <a name='L250'></a><a href='#L250'>250</a>
 <a name='L251'></a><a href='#L251'>251</a>
 <a name='L252'></a><a href='#L252'>252</a>
-<a name='L253'></a><a href='#L253'>253</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -342,6 +345,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -384,6 +389,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -514,9 +520,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -541,6 +544,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -566,6 +571,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { Task } = require('../../models');
 const { Tag } = require('../../models');
@@ -589,7 +595,9 @@ exports.getTaskById = async (req, res) =&gt; {
 return res.status(404).json({ message: "Task not found" });
 &nbsp;
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 };
 &nbsp;
@@ -604,7 +612,7 @@ exports.getAllTasks = async (req, res) =&gt; {
       order: sortOrder,
       limit,
       offset,
-      tags,
+      tags
     } = req.query;
     const whereClause = {
       userId: req.user.id,
@@ -637,6 +645,7 @@ exports.getAllTasks = async (req, res) =&gt; {
         : [];
     const tasks = await Task.findAll({
       where: whereClause,
+      include: includeClause,
       include: includeClause,
       order: sort,
       limit: pageLimit,
@@ -752,21 +761,18 @@ exports.getTaskLogs = async (req, res) =&gt; {
     const logs = await AuditLog.findAll({
       where: {
         taskId,
-        userId: req.user.id
+        userId: req.user.id,
       },
-      order: [['createdAt', 'DESC']]
+      order: [["createdAt", "DESC"]],
     });
 &nbsp;
     res.status(200).json({ logs });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch logs', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch logs", error: error.message });
   }
 };
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
 &nbsp;
 //Assign tag to a task
 exports.assignTag = async (req, res) =&gt; {
@@ -774,7 +780,7 @@ exports.assignTag = async (req, res) =&gt; {
   try {
     const task = await Task.findByPk(taskId);
     if (!task) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({ message: "Task not found" });
     }
     const tag = await Tag.findAll({ where: { name: req.body.name } });
     if (!tag || tag.length === 0) {
@@ -784,15 +790,17 @@ exports.assignTag = async (req, res) =&gt; {
 &nbsp;
     await TaskTag.create({
       taskId: task.id,
-      tagId: tag[0].id
+      tagId: tag[0].id,
     });
 &nbsp;
     res.status(201).json({
       message: 'Tag linked successfully',
     });
   } catch (error) {
-    console.error('Tag assignment failed:', error.message);
-    res.status(500).json({ message: 'Something went wrong while assigning the tag' });
+    console.error("Tag assignment failed:", error.message);
+    res
+      .status(500)
+      .json({ message: "Something went wrong while assigning the tag" });
   }
 };
 &nbsp;
@@ -811,22 +819,23 @@ exports.deleteTag = async (req, res) =&gt; {
     await TaskTag.destroy({
       where: {
         taskId: id,
-        tagId: tagId
-      }
+        tagId: tagId,
+      },
     });
     res.status(200).json({ message: 'Tag removed from task successfully' });
   } catch (error) {
-    console.error('Error removing tag from task:', error.message);
-    res.status(500).json({ message: 'Failed to remove tag from task' });
+    console.error("Error removing tag from task:", error.message);
+    res.status(500).json({ message: "Failed to remove tag from task" });
   }
-};</pre></td></tr></table></pre>
+};
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-24T06:35:56.366Z
+                at 2025-06-24T12:07:22.086Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
